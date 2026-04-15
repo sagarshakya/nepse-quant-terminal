@@ -1,0 +1,49 @@
+{
+  "config": {
+    "bear_threshold": -0.05,
+    "event_exit_mode": false,
+    "holding_days": 45,
+    "initial_capital": 1000000.0,
+    "max_positions": 5,
+    "profit_target_pct": null,
+    "rebalance_frequency": 5,
+    "regime_max_positions": {
+      "bear": 2,
+      "bull": 5,
+      "neutral": 4
+    },
+    "regime_sector_limits": {
+      "bear": 0.25,
+      "bull": 0.5,
+      "neutral": 0.35
+    },
+    "sector_limit": 0.35,
+    "signal_types": [
+      "quality",
+      "quarterly_fundamental",
+      "xsec_momentum"
+    ],
+    "stop_loss_pct": 0.06,
+    "trailing_stop_pct": 0.15,
+    "use_regime_filter": true,
+    "use_trailing_stop": true
+  },
+  "created_at": "2026-04-14T14:29:42",
+  "description": "Temp forward breakthrough strategy. Default temp research strategy for account 2.",
+  "editable": false,
+  "execution_mode": "paper_runtime",
+  "id": "temp_forward_winner",
+  "name": "Temp Forward Winner",
+  "notes": {
+    "family": "temp_forward",
+    "intended_account": "account_2",
+    "origin_window": "2026-01-01 to 2026-04-11",
+    "tradeable_only": true
+  },
+  "ranking_overlay": {
+    "mode": "baseline"
+  },
+  "runner_mode": "temp_patched",
+  "source": "builtin",
+  "updated_at": "2026-04-14T14:29:42"
+}

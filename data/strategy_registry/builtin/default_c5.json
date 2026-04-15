@@ -1,0 +1,50 @@
+{
+  "config": {
+    "bear_threshold": -0.05,
+    "event_exit_mode": false,
+    "holding_days": 40,
+    "initial_capital": 1000000.0,
+    "max_positions": 5,
+    "profit_target_pct": null,
+    "rebalance_frequency": 5,
+    "regime_max_positions": {
+      "bear": 2,
+      "bull": 5,
+      "neutral": 4
+    },
+    "regime_sector_limits": {
+      "bear": 0.25,
+      "bull": 0.50,
+      "neutral": 0.35
+    },
+    "sector_limit": 0.35,
+    "signal_types": [
+      "volume",
+      "quality",
+      "low_vol",
+      "mean_reversion",
+      "quarterly_fundamental",
+      "xsec_momentum"
+    ],
+    "stop_loss_pct": 0.08,
+    "trailing_stop_pct": 0.10,
+    "use_regime_filter": true,
+    "use_trailing_stop": true
+  },
+  "created_at": "2026-01-01T00:00:00",
+  "description": "C5 Baseline — 6-signal factor model with regime filter. Vol+Quality+LowVol+MeanReversion+QF+XsecMomentum, 40 trading day holds.",
+  "editable": true,
+  "execution_mode": "paper_runtime",
+  "id": "default_c5",
+  "name": "C5 Baseline",
+  "notes": {
+    "family": "c5",
+    "tradeable_only": true
+  },
+  "ranking_overlay": {
+    "mode": "baseline"
+  },
+  "runner_mode": "standard",
+  "source": "builtin",
+  "updated_at": "2026-01-01T00:00:00"
+}
