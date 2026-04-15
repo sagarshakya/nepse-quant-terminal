@@ -214,11 +214,17 @@ pip install -r requirements.txt
 
 ### Database
 
-Populate the price database (`nepse_data.db`) with NEPSE OHLCV + fundamental data:
+Populate the price database with 2 years of NEPSE OHLCV data (fetched from Merolagani):
 
 ```bash
-python scripts/fetch_prices.py   # initial load
-python scripts/daily_update.py   # daily refresh
+python setup_data.py           # full backfill — takes 30–60 min
+python setup_data.py --days 90 # quick test with 90 days (~5 min)
+```
+
+For daily incremental updates after the initial backfill:
+
+```bash
+python scripts/ingestion/deterministic_daily_ingestion.py
 ```
 
 ### Run

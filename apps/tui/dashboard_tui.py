@@ -8589,16 +8589,20 @@ class NepseDashboard(App):
             broker_rows: list[list[Text]] = []
             top_broker_cols: list = []
             top_broker_rows: list[list[Text]] = []
-            broker_title = "BROKER FLOOR SIGNALS — Smart Money · Circular Trading · Pump Detection"
+            broker_title = "BROKER FLOOR SIGNALS — Run floorsheet scraper to enable"
             try:
                 import sqlite3 as _sqlite3
                 from backend.quant_pro.database import get_db_path as _get_db_path
                 _bconn = _sqlite3.connect(str(_get_db_path()))
                 _bconn.row_factory = _sqlite3.Row
-                _latest_bdate = (_bconn.execute(
-                    "SELECT MAX(as_of_date) FROM broker_signals_v2"
-                ).fetchone() or [None])[0]
-                if _latest_bdate:
+                # Check if broker_signals_v2 table has any data
+                try:
+                    _latest_bdate = (_bconn.execute(
+                        "SELECT MAX(as_of_date) FROM broker_signals_v2"
+                    ).fetchone() or [None])[0]
+                except Exception:
+                    _latest_bdate = None
+                if False:  # broker signal computation not included in public release
                     _brows = _bconn.execute("""
                         SELECT b.symbol,
                                b.hhi_buy, b.hhi_sell,
@@ -8657,57 +8661,12 @@ class NepseDashboard(App):
                                  style=GAIN_HI if display_score > 0.15 else WHITE),
                             _dim_text(f"{trades:6d}"),
                         ])
-                # ── Top Brokers panel (right side) ──────────────────────────
-                top_broker_cols = [
-                    ("BROKER", "tbcode",  8),
-                    ("SYMS",   "tbsyms",  5),
-                    ("BUY",    "tbbuy",  10),
-                    ("SELL",   "tbsell", 10),
-                    ("NET",    "tbnet",  10),
-                    ("CIRC#",  "tbcirc",  6),
-                ]
-                top_broker_rows: list[list[Text]] = []
-                try:
-                    # Aggregate broker activity for the latest date
-                    _tbrows = _bconn.execute("""
-                        SELECT f.broker_code,
-                               COUNT(DISTINCT f.symbol)    AS n_syms,
-                               SUM(f.buy_qty)              AS total_buy,
-                               SUM(f.sell_qty)             AS total_sell,
-                               SUM(f.net_qty)              AS net_qty,
-                               COUNT(DISTINCT CASE WHEN b.circular_score > 0.20
-                                                   THEN f.symbol END) AS circ_syms
-                        FROM signal_scores f
-                        LEFT JOIN broker_signals_v2 b
-                          ON f.symbol = b.symbol AND b.as_of_date = f.as_of_date
-                        WHERE f.as_of_date = ?
-                        GROUP BY f.broker_code
-                        ORDER BY SUM(f.buy_qty) + SUM(f.sell_qty) DESC
-                        LIMIT 30
-                    """, (_latest_bdate,)).fetchall()
-                    for _tb in _tbrows:
-                        tb_buy  = int(_tb["total_buy"]  or 0)
-                        tb_sell = int(_tb["total_sell"] or 0)
-                        tb_net  = int(_tb["net_qty"]    or 0)
-                        tb_circ = int(_tb["circ_syms"]  or 0)
-                        tb_syms = int(_tb["n_syms"]     or 0)
-                        tb_code = str(_tb["broker_code"])
-                        net_style = GAIN_HI if tb_net > 0 else (LOSS_HI if tb_net < 0 else LABEL)
-                        circ_style = LOSS_HI if tb_circ >= 5 else (AMBER if tb_circ >= 2 else WHITE)
-                        top_broker_rows.append([
-                            Text(f"{tb_code:>6}", style=AMBER if tb_circ >= 5 else WHITE),
-                            _dim_text(f"{tb_syms:4d}"),
-                            _dim_text(f"{tb_buy:>9,}"),
-                            _dim_text(f"{tb_sell:>9,}"),
-                            Text(f"{tb_net:>+9,}", style=net_style),
-                            Text(f"{tb_circ:4d}" if tb_circ > 0 else "   —", style=circ_style),
-                        ])
-                except Exception as _tbe:
-                    top_broker_rows.append([_dim_text(f"Error: {_tbe}"), *[Text("")] * 5])
-
+                # Top Brokers panel — populated by floorsheet scraper (not in public release)
+                top_broker_cols = []
+                top_broker_rows = []
                 _bconn.close()
             except Exception as _be:
-                broker_rows.append([_dim_text("—"), _dim_text(f"Broker data unavailable: {_be}"), *[Text("")] * 6])
+                broker_rows.append([_dim_text("—"), _dim_text("Run floorsheet scraper to populate broker data"), *[Text("")] * 6])
                 top_broker_cols = []
                 top_broker_rows = []
 
