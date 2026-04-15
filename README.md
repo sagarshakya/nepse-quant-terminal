@@ -25,15 +25,15 @@ A terminal-based quantitative trading dashboard for the Nepal Stock Exchange (NE
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│                   Textual TUI                        │
+│                   Textual TUI                       │
 │  dashboard_tui.py  ·  9 tabs  ·  keyboard-driven    │
 └──────────┬──────────────────────┬───────────────────┘
            │                      │
     ┌──────▼──────┐      ┌────────▼────────┐
-    │  Market     │      │  Trading Engine  │
-    │  Data Layer │      │  (per account)   │
-    │  nepse_data │      │  tui_trading_    │
-    │  .db        │      │  engine.py       │
+    │  Market     │      │  Trading Engine │
+    │  Data Layer │      │  (per account)  │
+    │  nepse_data │      │  tui_trading_   │
+    │  .db        │      │  engine.py      │
     └──────┬──────┘      └────────┬────────┘
            │                      │
     ┌──────▼──────────────────────▼────────┐
